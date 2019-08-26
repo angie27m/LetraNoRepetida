@@ -42,7 +42,7 @@ public class Procedimiento {
             cadenaIngresada = scanner.nextLine();
             separacion();
             Scanner respuesta = new Scanner(System.in);
-            System.out.println("¿Desea continuar? S=>Si o N=>No");
+            System.out.println("¿Desea continuar? S=>Si");
             seguir = respuesta.nextLine();
         } while (seguir.equals("s") || seguir.equals("S"));
     }
@@ -51,24 +51,21 @@ public class Procedimiento {
      * Este método se encarga de separar por caracteres el string ingresado por
      * el usuario
      *
-     * @param primeraVez esta variable es usada para identificar si es la primer
+     * @param contador esta variable es usada para identificar si es la primer
      * letra del texto
      */
     public void separacion() {
         cadenaSeparada = cadenaIngresada.toCharArray();
-        boolean primeraVez = true;
+        byte contador = 1;
         letraSinRepetir = cadenaSeparada[0];
         for (int i = 0; i < cadenaIngresada.length(); i++) {
-            if (primeraVez) {
+            if (contador == 1) {
                 letraSinRepetir = cadenaSeparada[i];
-                primeraVez = false;
-            } else {
-                if (letraSinRepetir == cadenaSeparada[i]) {
-                    letraSinRepetir = validarUnica(i);
-                }
-                if (letraSinRepetir == 0) {
-                    letraSinRepetir = validarRepetidas(cadenaSeparada[i]);
-                }
+                contador = 0;
+            } else if (letraSinRepetir == cadenaSeparada[i]) {
+                letraSinRepetir = validarUnica();
+            } else if (letraSinRepetir == 0) {
+                letraSinRepetir = validarRepetidas(cadenaSeparada[i]);
             }
             impresion(cadenaSeparada[i]);
         }
@@ -80,26 +77,27 @@ public class Procedimiento {
      *
      * @param letraSinRepetir esta variable contiene la primer letra que no ha
      * sido repetida
-     * @param letraUnica contiene la posicion del array en donde está la letra
-     * que no ha sido repetida
      * @param acumulador variable usada para saber la cantidad de veces que se
      * ha repetido una letra dentro del texto
      * @return retorna la primer letra que encuentra sin repetirse
      */
-    private char validarUnica(int letraUnica) {
-        int acumulador;
-        for (int i = 0; i < letraUnica; i++) {
-            if (letraSinRepetir != cadenaSeparada[i]) {
-                acumulador = 0;
-                for (int j = 0; j < letraUnica; j++) {
+    private char validarUnica() {
+        int acumulador, i = 0, j = 0;
+        while (i < cadenaSeparada.length) {
+            if (cadenaSeparada[i] != letraSinRepetir) {
+                acumulador=0;
+                while (j < cadenaSeparada.length) {
                     if (cadenaSeparada[i] == cadenaSeparada[j]) {
                         acumulador++;
                     }
+                    j++;
                 }
                 if (acumulador == 1) {
                     return cadenaSeparada[i];
                 }
             }
+            i++;
+
         }
         return 0;
     }
@@ -109,12 +107,12 @@ public class Procedimiento {
      * contador es igual a 1 retorna la letra guardada
      *
      * @param caracter
-     * @return devuelve el caracter que se repite
+     * @return devuelve el caracter que está siendo comparado
      */
     private char validarRepetidas(char caracter) {
         int contador = 0;
-        for (char dato : cadenaSeparada) {
-            if (dato == caracter) {
+        for (int i = 0; i < cadenaSeparada.length; i++) {
+            if (cadenaSeparada[i] == caracter) {
                 contador++;
             }
         }
@@ -134,9 +132,11 @@ public class Procedimiento {
      */
     private void impresion(char caracter) {
         if (letraSinRepetir == 0) {
-            System.out.println("Reading: " + caracter + " Todos las letras se repiten");
+            System.out.println("Reading: " + caracter);
+            System.out.println("Todas las letras se repiten");
         } else {
-            System.out.println("Reading: " + caracter + " La primer letra que no se repite es: " + letraSinRepetir);
+            System.out.println("Reading: " + caracter);
+            System.out.println("La primer letra que no se repite es: " + letraSinRepetir);
         }
     }
 }
